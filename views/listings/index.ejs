@@ -1,0 +1,109 @@
+
+      
+
+
+ <% layout("/layouts/boilerplate") %>
+<%= success %>
+
+<style>
+  #filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .filter {
+    text-align: center;
+    margin-right: 2rem;
+    margin-top: 2rem;
+    opacity: 0.7;
+  }
+  .filter:hover {
+    opacity: 1;
+    cursor: pointer;
+  }
+  .filter p {
+    font-size: 0.8rem;
+  }
+  .tax-info {
+    display: none;
+  }
+  .tax-toggle {
+    border: 1px solid black;
+    border-radius: 1rem;
+    height: 3.25rem;
+    padding: 1rem;
+    margin-left: auto;
+    display: inline;
+    align-items: center;
+    white-space: nowrap;
+  }
+</style>
+
+<div id="filters">
+  <% const categories = [
+    { path: 'trending', icon: 'fa-fire', label: 'Trending' },
+    { path: 'rooms', icon: 'fa-bed', label: 'Rooms' },
+    { path: 'iconic-cities', icon: 'fa-mountain-city', label: 'Iconic Cities' },
+    { path: 'mountains', icon: 'fa-mountain', label: 'Mountains' },
+    { path: 'castles', icon: 'fa-fort-awesome', label: 'Castles', brand: true },
+    { path: 'amazing-pools', icon: 'fa-person-swimming', label: 'Amazing Pools' },
+    { path: 'camping', icon: 'fa-campground', label: 'Camping' },
+    { path: 'farms', icon: 'fa-cow', label: 'Farms' },
+    { path: 'arctic', icon: 'fa-snowflake', label: 'Arctic', regular: true },
+    { path: 'domes', icon: 'fa-igloo', label: 'Domes' },
+    { path: 'boats', icon: 'fa-ship', label: 'Boats' }
+  ]; %>
+  <% categories.forEach(cat => { %>
+    <div class="filter">
+      <a href="/listings/category/<%= cat.path %>">
+        <div>
+          <i class="fa-<%= cat.brand ? 'brands' : cat.regular ? 'regular' : 'solid' %> <%= cat.icon %>"></i>
+        </div>
+        <p><%= cat.label %></p>
+      </a>
+    </div>
+  <% }) %>
+
+  <div class="tax-toggle">
+    <div class="form-check-reverse form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+      <label class="form-check-label" for="flexswitchCheckDefault">Display total after Taxes</label>
+    </div>
+  </div>
+</div>
+
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-4 mt-3" id="listings-container">
+  <% for (let listing of allListings) { %>
+    <div class="col">
+      <div class="card col listing-card">
+        <a href="/listings/<%= listing._id %>" class="listing-link">
+          <img src="<%= listing.image?.url || listing.image %>" class="card-img-top" alt="<%= listing.title %>" style="height:20rem;">
+        </a>
+        <div class="card-img-overlay"></div>
+        <div class="card-body">
+          <a href="/listings/<%= listing._id %>" class="listing-link">
+            <p class="card-text">
+              <b><%= listing.title %></b><br>
+              &#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> / night
+              <i class="tax-info"> &nbsp; &nbsp; +18% GST</i>
+            </p>
+          </a>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+  
+
+
+<script>
+  let taxSwitch = document.getElementById("flexSwitchCheckDefault");
+  taxSwitch.addEventListener("click", () => {
+    let taxInfo = document.getElementsByClassName("tax-info");
+    for (let info of taxInfo) {
+      info.style.display = info.style.display !== "inline" ? "inline" : "none";
+    }
+  });
+</script>
