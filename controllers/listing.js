@@ -63,14 +63,51 @@ console.log("Listing owner ID:", listing.owner._id);
 // }
 
 
-module.exports.createListing = async (req, res,next) => {
+
+// module.exports.createListing = async (req, res, next) => {
     
-        const newListing = new Listing(req.body.listing);
-       newListing.owner = req.user._id;
-       await newListing.save();
-       req.flash("success","New Listing Created!");
-       res.redirect("/listings");
+//     // Set default image if not provided
+//     if (!req.body.listing.image || !req.body.listing.image.url) {
+//         req.body.listing.image = {
+//             filename: "default",
+//             url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+//         };
+//     }
+//     const newListing = new Listing(req.body.listing);
+//     newListing.owner = req.user._id;
+    
+    
+//     await newListing.save();
+//     req.flash("success", "New Listing Created!");
+//     res.redirect("/listings");
+// };
+
+
+
+//c
+module.exports.createListing = async (req, res, next) => {
+    const newListing = new Listing(req.body.listing);
+    newListing.owner = req.user._id;
+
+    // Check if file was uploaded
+    if (req.file) {
+        newListing.image = {
+            url: req.file.path,
+            filename: req.file.filename
+        };
+    } else {
+        // Default image
+        newListing.image = {
+            url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+            filename: "default"
+        };
+    }
+
+    await newListing.save();
+    req.flash("success", "New Listing Created!");
+    res.redirect("/listings");
 };
+
 
 module.exports.renderEditForm = async(req,res)=>{
     let{ id } = req.params;

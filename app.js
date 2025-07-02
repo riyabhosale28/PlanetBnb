@@ -128,6 +128,7 @@ if(process.env.NODE_ENV !="production"){
     const path = require("path");
     const methodOverride = require("method-override");
     const ejsMate = require("ejs-mate");
+    
     const wrapAsync = require("./utils/wrapAsync.js");
     const ExpressError = require("./utils/ExpressError.js");
     // const { listingSchema, reviewSchema } = require("./schema.js");
@@ -152,6 +153,8 @@ if(process.env.NODE_ENV !="production"){
         }
     }
     main();
+
+    
     
     app.set("view engine", "ejs");
     app.set("views", path.join(__dirname, "views"));
@@ -177,15 +180,18 @@ if(process.env.NODE_ENV !="production"){
     
     app.use(session(sessionOptions));
     app.use(flash());
+    
+    
+    app.use(passport.initialize());
+    app.use(passport.session());
     app.use((req, res, next) => {
         res.locals.success = req.flash("success");
         res.locals.error = req.flash("error");
         res.locals.currUser = req.user;
         next();
     });
-    
-    app.use(passport.initialize());
-    app.use(passport.session());
+
+
     passport.use(new Localstrategy(User.authenticate()));
     
     passport.serializeUser(User.serializeUser());

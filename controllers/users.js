@@ -16,7 +16,7 @@ module.exports.signup = async(req,res)=>{
         if(err){
             return next(err);
         }
-        req.flash("success","welcome to WanderLust!");
+        req.flash("success","welcome to PlanetBnB!");
         res.redirect("/listings");
     });
     }catch(e){
@@ -31,7 +31,7 @@ module.exports.renderLoginForm = (req,res)=>{
 };
 
 module.exports.login = async(req,res)=>{
-    req.flash("success","Welcome back  to WanderLust! ");
+    req.flash("success","Welcome back  to PlanetBnB! ");
     let redirectUrl = res.locals.redirectUrl || "/listings";
     res.redirect(redirectUrl);
     };
@@ -44,6 +44,6 @@ module.exports.login = async(req,res)=>{
         }
 
             req.flash("success","you are logged out!");
-            res.redirect("/listinga");
+            res.redirect("/listings");
     });
 };
